@@ -4,8 +4,12 @@
   "private": true,
   "dependencies": {
     "@contentful/app-sdk": "4.14.1",
+    "@contentful/default-field-editors": "^1.2.75",
     "@contentful/f36-components": "4.24.0",
     "@contentful/f36-tokens": "4.0.1",
+    "@contentful/field-editor-reference": "^5.8.6",
+    "@contentful/field-editor-rich-text": "^3.4.14",
+    "@contentful/field-editor-url": "^1.1.11",
     "@contentful/react-apps-toolkit": "1.2.14",
     "contentful-management": "10.26.0",
     "emotion": "10.0.27",

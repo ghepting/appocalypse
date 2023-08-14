@@ -1,10 +1,10 @@
 import React from "react";
 import { Box, Button, Stack, Subheading } from "@contentful/f36-components";
-import { EditorExtensionSDK } from "@contentful/app-sdk";
+import { EditorAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
 
 const Entry = () => {
-  const sdk = useSDK<EditorExtensionSDK>();
+  const sdk = useSDK<EditorAppSDK>();
 
   const dialogOptions = {
     title: "Appocalypse",

@@ -18,7 +18,7 @@ import { SingleLineEditor } from "@contentful/field-editor-single-line";
 import { SlugEditor } from "@contentful/field-editor-slug";
 import { TagsEditor } from "@contentful/field-editor-tags";
 import { UrlEditor } from "@contentful/field-editor-url";
-import { ContentTypeField, FieldExtensionSDK } from "@contentful/app-sdk";
+import { ContentTypeField, FieldAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
 import {
   MultipleEntryReferenceEditor,
@@ -28,7 +28,7 @@ import {
 } from "@contentful/field-editor-reference";
 
 const Field = () => {
-  const sdk = useSDK<FieldExtensionSDK>();
+  const sdk = useSDK<FieldAppSDK>();
 
   useEffect(() => {
     sdk.window.startAutoResizer();

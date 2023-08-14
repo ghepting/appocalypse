@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { AppExtensionSDK } from "@contentful/app-sdk";
+import { ConfigAppSDK } from "@contentful/app-sdk";
 import { Box, Subheading, Stack, Button } from "@contentful/f36-components";
 import { useSDK } from "@contentful/react-apps-toolkit";
 
@@ -7,7 +7,7 @@ export interface AppInstallationParameters {}
 
 const ConfigScreen = () => {
   const [parameters, setParameters] = useState<AppInstallationParameters>({});
-  const sdk = useSDK<AppExtensionSDK>();
+  const sdk = useSDK<ConfigAppSDK>();
 
   const onConfigure = useCallback(async () => {
     // This method will be called when a user clicks on "Install"

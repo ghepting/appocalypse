@@ -1,10 +1,10 @@
 import React from "react";
 import { Box, Button, Stack, Subheading } from "@contentful/f36-components";
-import { PageExtensionSDK } from "@contentful/app-sdk";
+import { PageAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
 
 const Page = () => {
-  const sdk = useSDK<PageExtensionSDK>();
+  const sdk = useSDK<PageAppSDK>();
 
   const dialogOptions = {
     title: "Appocalypse",

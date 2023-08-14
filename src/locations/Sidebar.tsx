@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { SidebarExtensionSDK } from "@contentful/app-sdk";
-import { useSDK } from "@contentful/react-apps-toolkit";
+import { SidebarAppSDK } from "@contentful/app-sdk";
+import { useCMA, useSDK } from "@contentful/react-apps-toolkit";
 import { Button, Stack, Subheading } from "@contentful/f36-components";
 
 const Sidebar = () => {
-  const sdk = useSDK<SidebarExtensionSDK>();
+  const sdk = useSDK<SidebarAppSDK>();
+  const cma = useCMA();
 
   useEffect(() => {
     sdk.window.startAutoResizer();

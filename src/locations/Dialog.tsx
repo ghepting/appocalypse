@@ -6,11 +6,11 @@ import {
   Stack,
   Subheading,
 } from "@contentful/f36-components";
-import { DialogExtensionSDK } from "@contentful/app-sdk";
+import { DialogAppSDK } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
 
 const Dialog = () => {
-  const sdk = useSDK<DialogExtensionSDK>();
+  const sdk = useSDK<DialogAppSDK>();
 
   useEffect(() => {
     sdk.window.startAutoResizer();

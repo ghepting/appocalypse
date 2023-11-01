@@ -6,11 +6,22 @@ import {
   Stack,
   Subheading,
 } from "@contentful/f36-components";
-import { DialogAppSDK } from "@contentful/app-sdk";
+import {
+  DialogAppSDK,
+  Locations,
+  SerializedJSONValue,
+  locations,
+} from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
+
+export interface DialogParams {
+  location: Locations[keyof Locations];
+  [key: string]: SerializedJSONValue;
+}
 
 const Dialog = () => {
   const sdk = useSDK<DialogAppSDK>();
+  const params = sdk.parameters.invocation as DialogParams;
 
   useEffect(() => {
     sdk.window.startAutoResizer();
@@ -24,15 +35,27 @@ const Dialog = () => {
         <code>{JSON.stringify(sdk.parameters.invocation, null, 2)}</code>
       </pre>
       <Stack alignItems="flex-start" flexDirection="column" spacing="spacingS">
-        <Button variant="primary" onClick={() => sdk.navigator.openAppConfig()}>
-          App Config
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => sdk.navigator.openCurrentAppPage()}
-        >
-          Page
-        </Button>
+        {params.location !== locations.LOCATION_HOME && (
+          <Button variant="primary" isDisabled={true}>
+            Home
+          </Button>
+        )}
+        {params.location !== locations.LOCATION_APP_CONFIG && (
+          <Button
+            variant="primary"
+            onClick={() => sdk.navigator.openAppConfig()}
+          >
+            App Config
+          </Button>
+        )}
+        {params.location !== locations.LOCATION_PAGE && (
+          <Button
+            variant="primary"
+            onClick={() => sdk.navigator.openCurrentAppPage()}
+          >
+            Page
+          </Button>
+        )}
       </Stack>
     </Box>
   );

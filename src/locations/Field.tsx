@@ -18,7 +18,12 @@ import { SingleLineEditor } from "@contentful/field-editor-single-line";
 import { SlugEditor } from "@contentful/field-editor-slug";
 import { TagsEditor } from "@contentful/field-editor-tags";
 import { UrlEditor } from "@contentful/field-editor-url";
-import { ContentTypeField, FieldAppSDK } from "@contentful/app-sdk";
+import {
+  ContentTypeField,
+  FieldAppSDK,
+  OpenCustomWidgetOptions,
+  locations,
+} from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
 import {
   MultipleEntryReferenceEditor,
@@ -26,6 +31,39 @@ import {
   SingleEntryReferenceEditor,
   SingleMediaEditor,
 } from "@contentful/field-editor-reference";
+import { DialogParams } from "./Dialog";
+
+export const fieldTypesToEditors: any = {
+  Array: {
+    Asset: ["MultipleMediaEditor"],
+    Entry: ["MultipleEntryReferenceEditor"],
+    Symbol: ["TagsEditor", "CheckboxEditor", "ListEditor"],
+  },
+  Link: {
+    Asset: ["SingleMediaEditor"],
+    Entry: ["SingleEntryReferenceEditor"],
+  },
+  Symbol: [
+    "SingleLineEditor",
+    "SlugEditor",
+    "UrlEditor",
+    "DropdownEditor",
+    "RadioEditor",
+  ],
+  Text: [
+    "MultipleLineEditor",
+    "MarkdownEditor",
+    "DropdownEditor",
+    "RadioEditor",
+  ],
+  RichText: ["RichTextEditor"],
+  Integer: ["NumberEditor", "DropdownEditor", "RadioEditor", "RatingEditor"],
+  Number: ["NumberEditor", "DropdownEditor", "RadioEditor", "RatingEditor"],
+  Date: ["DateEditor"],
+  Location: ["LocationEditor"],
+  Boolean: ["BooleanEditor"],
+  Object: ["JsonEditor"],
+};
 
 const Field = () => {
   const sdk = useSDK<FieldAppSDK>();
@@ -33,38 +71,6 @@ const Field = () => {
   useEffect(() => {
     sdk.window.startAutoResizer();
   });
-
-  const fieldTypesToEditors: any = {
-    Array: {
-      Asset: ["MultipleMediaEditor"],
-      Entry: ["MultipleEntryReferenceEditor"],
-      Symbol: ["TagsEditor", "CheckboxEditor", "ListEditor"],
-    },
-    Link: {
-      Asset: ["SingleMediaEditor"],
-      Entry: ["SingleEntryReferenceEditor"],
-    },
-    Symbol: [
-      "SingleLineEditor",
-      "SlugEditor",
-      "UrlEditor",
-      "DropdownEditor",
-      "RadioEditor",
-    ],
-    Text: [
-      "MultipleLineEditor",
-      "MarkdownEditor",
-      "DropdownEditor",
-      "RadioEditor",
-    ],
-    RichText: ["RichTextEditor"],
-    Integer: ["NumberEditor", "DropdownEditor", "RadioEditor", "RatingEditor"],
-    Number: ["NumberEditor", "DropdownEditor", "RadioEditor", "RatingEditor"],
-    Date: ["DateEditor"],
-    Location: ["LocationEditor"],
-    Boolean: ["BooleanEditor"],
-    Object: ["JsonEditor"],
-  };
 
   const fieldEditors: any = {
     BooleanEditor: {
@@ -179,8 +185,15 @@ const Field = () => {
       editor: SingleEntryReferenceEditor,
       props: {
         sdk: sdk,
+        isInitiallyDisabled: false,
+        hasCardEditActions: true,
+        viewType: "link",
         parameters: {
-          instance: sdk.field,
+          instance: {
+            showCreateEntityAction: true,
+            showLinkEntityAction: true,
+            bulkEditing: false,
+          },
         },
       },
     },
@@ -243,12 +256,19 @@ const Field = () => {
     setEditor(e.target.value);
   };
 
-  const dialogOptions = {
+  const dialogParams: DialogParams = {
+    location: locations.LOCATION_ENTRY_FIELD,
+    field: sdk.ids.field,
+    app: sdk.ids.app || null,
+  };
+
+  const dialogOptions: Omit<OpenCustomWidgetOptions, "id"> = {
     title: "Appocalypse",
-    minHeight: 500,
+    minHeight: "100vh",
+    width: "fullWidth",
     shouldCloseOnEscapePress: true,
     shouldCloseOnOverlayClick: true,
-    parameters: { foo: `Opened from: Field (${sdk.ids.field})` },
+    parameters: dialogParams,
   };
 
   return (
@@ -269,7 +289,9 @@ const Field = () => {
               isDisabled={editors.length < 2}
             >
               {editors.map((Editor: any, index: Number) => (
-                <Select.Option value={Editor}>{Editor}</Select.Option>
+                <Select.Option key={`key-${index}`} value={Editor}>
+                  {Editor}
+                </Select.Option>
               ))}
             </Select>
           </div>

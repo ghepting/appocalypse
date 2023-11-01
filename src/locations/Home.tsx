@@ -1,17 +1,22 @@
 import React from "react";
 import { Box, Button, Stack, Subheading } from "@contentful/f36-components";
-import { HomeAppSDK } from "@contentful/app-sdk";
+import { HomeAppSDK, locations } from "@contentful/app-sdk";
 import { useSDK } from "@contentful/react-apps-toolkit";
+import { DialogParams } from "./Dialog";
 
 const Home = () => {
   const sdk = useSDK<HomeAppSDK>();
+
+  const dialogParams: DialogParams = {
+    location: locations.LOCATION_HOME,
+  };
 
   const dialogOptions = {
     title: "Appocalypse",
     minHeight: 500,
     shouldCloseOnEscapePress: true,
     shouldCloseOnOverlayClick: true,
-    parameters: { foo: `Opened from: Home` },
+    parameters: dialogParams,
   };
 
   return (

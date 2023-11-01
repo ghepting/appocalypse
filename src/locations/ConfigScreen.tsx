@@ -1,7 +1,8 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { ConfigAppSDK } from "@contentful/app-sdk";
+import { ConfigAppSDK, locations } from "@contentful/app-sdk";
 import { Box, Subheading, Stack, Button } from "@contentful/f36-components";
 import { useSDK } from "@contentful/react-apps-toolkit";
+import { DialogParams } from "./Dialog";
 
 export interface AppInstallationParameters {}
 
@@ -51,18 +52,25 @@ const ConfigScreen = () => {
     })();
   }, [sdk]);
 
+  const dialogParams: DialogParams = {
+    location: locations.LOCATION_APP_CONFIG,
+  };
+
   const dialogOptions = {
     title: "Appocalypse",
     minHeight: 500,
     shouldCloseOnEscapePress: true,
     shouldCloseOnOverlayClick: true,
-    parameters: { foo: `Opened from: ConfigScreen` },
+    parameters: dialogParams,
   };
 
   return (
     <Box padding="spacingL">
       <Subheading>Appocalypse (App ID: {sdk.ids.app})</Subheading>
       <Stack alignItems="flex-start" flexDirection="column" spacing="spacingS">
+        <Button variant="primary" isDisabled={true}>
+          Home
+        </Button>
         <Button
           variant="primary"
           onClick={() => sdk.navigator.openCurrentAppPage()}

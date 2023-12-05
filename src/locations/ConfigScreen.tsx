@@ -1,14 +1,18 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { ConfigAppSDK, locations } from "@contentful/app-sdk";
 import { Box, Subheading, Stack, Button } from "@contentful/f36-components";
-import { useSDK } from "@contentful/react-apps-toolkit";
+import { useCMA, useSDK } from "@contentful/react-apps-toolkit";
 import { DialogParams } from "./Dialog";
+import { AppActionProps } from "contentful-management";
 
 export interface AppInstallationParameters {}
 
 const ConfigScreen = () => {
-  const [parameters, setParameters] = useState<AppInstallationParameters>({});
   const sdk = useSDK<ConfigAppSDK>();
+  const cma = useCMA();
+
+  const [parameters, setParameters] = useState<AppInstallationParameters>({});
+  const [appActions, setAppActions] = useState<AppActionProps[]>([]);
 
   const onConfigure = useCallback(async () => {
     // This method will be called when a user clicks on "Install"
@@ -52,6 +56,18 @@ const ConfigScreen = () => {
     })();
   }, [sdk]);
 
+  useEffect(() => {
+    setAppActions([] as AppActionProps[]);
+    cma.appAction
+      .getManyForEnvironment({
+        environmentId: sdk.ids.environment,
+        spaceId: sdk.ids.space,
+      })
+      .then((appActions) => {
+        setAppActions(appActions.items);
+      });
+  }, [cma, sdk.ids.environment, sdk.ids.space]);
+
   const dialogParams: DialogParams = {
     location: locations.LOCATION_APP_CONFIG,
   };
@@ -62,6 +78,40 @@ const ConfigScreen = () => {
     shouldCloseOnEscapePress: true,
     shouldCloseOnOverlayClick: true,
     parameters: dialogParams,
+  };
+
+  const ping = async () => {
+    const appAction = appActions.find((x) => x.sys.id === "ping");
+
+    if (!appAction) {
+      sdk.notifier.error("No app action found!");
+      return;
+    }
+
+    const appActionResult = await cma.appActionCall.createWithResponse(
+      {
+        appActionId: appAction?.sys.id,
+        environmentId: sdk.ids.environment,
+        spaceId: sdk.ids.space,
+        appDefinitionId: sdk.ids.app,
+      },
+      {
+        parameters: {
+          message: "Hello from the frontend!",
+        },
+      }
+    );
+
+    if (!appActionResult) {
+      sdk.notifier.error("No result returned when calling app action!");
+      return;
+    }
+
+    sdk.notifier.success(
+      `Successfully called app action! Response: ${
+        JSON.parse(appActionResult.response.body).message
+      }`
+    );
   };
 
   return (
@@ -82,6 +132,9 @@ const ConfigScreen = () => {
           onClick={() => sdk.dialogs.openCurrentApp(dialogOptions)}
         >
           Dialog
+        </Button>
+        <Button variant="positive" onClick={() => ping()}>
+          Ping
         </Button>
       </Stack>
     </Box>

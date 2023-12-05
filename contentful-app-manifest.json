@@ -1,0 +1,21 @@
+{
+  "actions": [
+    {
+      "id": "ping",
+      "name": "Ping Pong",
+      "category": "Custom",
+      "description": "This action returns a response.",
+      "type": "function",
+      "path": "actions/ping.js",
+      "entryFile": "./actions/ping.ts",
+      "allowNetworks": [],
+      "parameters": [
+        {
+          "id": "message",
+          "name": "message",
+          "type": "Symbol"
+        }
+      ]
+    }
+  ]
+}

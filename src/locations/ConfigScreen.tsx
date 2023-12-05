@@ -3,12 +3,14 @@ import { ConfigAppSDK, locations } from "@contentful/app-sdk";
 import { Box, Subheading, Stack, Button } from "@contentful/f36-components";
 import { useSDK } from "@contentful/react-apps-toolkit";
 import { DialogParams } from "./Dialog";
+import Ping from "../components/Ping";
 
 export interface AppInstallationParameters {}
 
 const ConfigScreen = () => {
-  const [parameters, setParameters] = useState<AppInstallationParameters>({});
   const sdk = useSDK<ConfigAppSDK>();
+
+  const [parameters, setParameters] = useState<AppInstallationParameters>({});
 
   const onConfigure = useCallback(async () => {
     // This method will be called when a user clicks on "Install"
@@ -83,6 +85,7 @@ const ConfigScreen = () => {
         >
           Dialog
         </Button>
+        <Ping />
       </Stack>
     </Box>
   );

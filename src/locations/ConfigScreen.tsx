@@ -1,14 +1,16 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { ConfigAppSDK, locations } from "@contentful/app-sdk";
 import { Box, Subheading, Stack, Button } from "@contentful/f36-components";
-import { useSDK } from "@contentful/react-apps-toolkit";
+import { useCMA, useSDK } from "@contentful/react-apps-toolkit";
 import { DialogParams } from "./Dialog";
 import Ping from "../components/Ping";
+import { Environment } from "contentful-management/types";
 
 export interface AppInstallationParameters {}
 
 const ConfigScreen = () => {
   const sdk = useSDK<ConfigAppSDK>();
+  const cma = useCMA();
 
   const [parameters, setParameters] = useState<AppInstallationParameters>({});
 
@@ -86,6 +88,23 @@ const ConfigScreen = () => {
           Dialog
         </Button>
         <Ping />
+        <Button
+          variant="primary"
+          onClick={async () => {
+            const appInstallations = await cma.appInstallation.getForOrganization({
+              organizationId: sdk.ids.organization,
+              appDefinitionId: sdk.ids.app,
+            });
+
+            const installedEnvironments = appInstallations.items.map(
+              (appInstallation) => appInstallation.sys.environment.sys.id
+            );
+
+            sdk.notifier.success(`Installed Environments: ${installedEnvironments.join(", ")}`);
+          }}
+        >
+          Get Installed Environments
+        </Button>
       </Stack>
     </Box>
   );

@@ -4,7 +4,6 @@ import { Box, Subheading, Stack, Button } from "@contentful/f36-components";
 import { useCMA, useSDK } from "@contentful/react-apps-toolkit";
 import { DialogParams } from "./Dialog";
 import Ping from "../components/Ping";
-import { Environment } from "contentful-management/types";
 
 export interface AppInstallationParameters {}
 
@@ -68,6 +67,24 @@ const ConfigScreen = () => {
     parameters: dialogParams,
   };
 
+  const updateAppInstallation = async () => {
+    const appInstallation = await cma.appInstallation
+      .getForOrganization({
+        organizationId: sdk.ids.organization,
+        appDefinitionId: sdk.ids.app,
+      }).then((response) => response.items.find((appInstallation) => {
+        return appInstallation.sys.environment.sys.id === sdk.ids.environment
+      }));
+
+    if (appInstallation) {
+      sdk.notifier.success(
+        `App Installation: ${JSON.stringify(appInstallation)}`
+      );
+    } else {
+      sdk.notifier.error(`App Installation not found`);
+    }
+  }
+
   return (
     <Box padding="spacingL">
       <Subheading>Appocalypse (App ID: {sdk.ids.app})</Subheading>
@@ -105,6 +122,7 @@ const ConfigScreen = () => {
         >
           Get Installed Environments
         </Button>
+        <Button variant="primary" onClick={updateAppInstallation}>Get App Installation</Button>
       </Stack>
     </Box>
   );

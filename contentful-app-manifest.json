@@ -6,8 +6,8 @@
       "category": "Custom",
       "description": "This action returns a response.",
       "type": "function",
-      "path": "actions/ping.js",
-      "entryFile": "./actions/ping.ts",
+      "path": "functions/ping.js",
+      "entryFile": "./functions/ping.ts",
       "allowNetworks": [],
       "parameters": [
         {

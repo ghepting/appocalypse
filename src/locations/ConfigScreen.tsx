@@ -85,6 +85,19 @@ const ConfigScreen = () => {
     }
   }
 
+  const getAppInstallationsForOrg = async () => {
+    const appInstallations =
+      await cma.appInstallation.getForOrganization({
+        organizationId: sdk.ids.organization,
+        appDefinitionId: sdk.ids.app,
+        query: { spaceId: {} },
+      });
+
+    sdk.notifier.success(
+      `App Installations: ${JSON.stringify(appInstallations.items)}`
+    );
+  }
+
   return (
     <Box padding="spacingL">
       <Subheading>Appocalypse (App ID: {sdk.ids.app})</Subheading>
@@ -108,21 +121,29 @@ const ConfigScreen = () => {
         <Button
           variant="primary"
           onClick={async () => {
-            const appInstallations = await cma.appInstallation.getForOrganization({
-              organizationId: sdk.ids.organization,
-              appDefinitionId: sdk.ids.app,
-            });
+            const appInstallations =
+              await cma.appInstallation.getForOrganization({
+                organizationId: sdk.ids.organization,
+                appDefinitionId: sdk.ids.app,
+              });
 
             const installedEnvironments = appInstallations.items.map(
               (appInstallation) => appInstallation.sys.environment.sys.id
             );
 
-            sdk.notifier.success(`Installed Environments: ${installedEnvironments.join(", ")}`);
+            sdk.notifier.success(
+              `Installed Environments: ${installedEnvironments.join(", ")}`
+            );
           }}
         >
           Get Installed Environments
         </Button>
-        <Button variant="primary" onClick={updateAppInstallation}>Get App Installation</Button>
+        <Button variant="primary" onClick={updateAppInstallation}>
+          Get App Installation
+        </Button>
+        <Button variant="primary" onClick={getAppInstallationsForOrg}>
+          Get All App Installations for Org
+        </Button>
       </Stack>
     </Box>
   );
